@@ -62,6 +62,7 @@ A fonte de dados utilizada (cnpj.biz) é pública, mas o site não fornece API o
 Este projeto é para fins educacionais e uso pessoal.
 
 📷 Exemplo
+
 ![image](https://github.com/user-attachments/assets/c2f874c7-4a86-4a14-8aa4-8be6e791acfe)
 
 
