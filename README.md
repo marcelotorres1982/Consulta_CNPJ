@@ -37,23 +37,18 @@ ChromeDriver compatível com sua versão do Chrome
 Instale as dependências com:
 
 bash
-Copiar
-Editar
 pip install customtkinter selenium beautifulsoup4
+
 ⚙️ Execução
 Clone este repositório:
 
-bash
-Copiar
-Editar
 git clone https://github.com/seu-usuario/nome-do-repositorio.git
 cd nome-do-repositorio
 Execute o script:
 
 bash
-Copiar
-Editar
 python nome_do_arquivo.py
+
 Digite um CNPJ válido na interface e clique em Buscar.
 
 📌 Observações
