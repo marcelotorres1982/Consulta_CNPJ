@@ -1,6 +1,7 @@
 🔍 Consulta de CNPJ com Interface Moderna
 
-Este projeto permite consultar informações públicas de empresas brasileiras (CNPJ), extraindo telefone e email diretamente do site https://cnpj.biz, utilizando web scraping com Selenium, e exibe os dados em uma interface moderna com CustomTkinter.
+Este projeto permite consultar informações públicas de empresas brasileiras (CNPJ), extraindo telefone e email diretamente do site https://cnpj.biz, 
+utilizando web scraping com Selenium, e exibe os dados em uma interface moderna com CustomTkinter.
 
 🚀 Funcionalidades
 Consulta de CNPJ com ou sem pontuação (ex: 00.000.000/0000-00 ou 00000000000000)
