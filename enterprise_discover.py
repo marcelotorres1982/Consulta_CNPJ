@@ -1,154 +1,125 @@
-import requests
-from bs4 import BeautifulSoup
-import tkinter as tk
-from tkinter import messagebox
 import re
+import customtkinter as ctk
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+import webbrowser
 
+# Configurações da interface
+ctk.set_appearance_mode("System")
+ctk.set_default_color_theme("blue")
+
+# Limpa pontuação do CNPJ
 def limpar_cnpj(cnpj):
     return re.sub(r'\D', '', cnpj)
 
-def consulta_speedio(cnpj):
-    url = f"https://api-publica.speedio.com.br/buscarcnpj?cnpj={cnpj}"
-    try:
-        response = requests.get(url, timeout=8)
-        if response.status_code == 200:
-            data = response.json()
-            telefone = data.get("TELEFONE")
-            email = data.get("EMAIL")
-            if telefone or email:
-                return {
-                    "fonte": "Speedio",
-                    "nome_fantasia": data.get("NOME_FANTASIA"),
-                    "telefone": telefone,
-                    "email": email
-                }
-    except Exception as e:
-        print("Erro na API Speedio:", e)
-    return None
-
-def consulta_publica_cnpj_ws(cnpj):
-    url = f"https://publica.cnpj.ws/cnpj/{cnpj}"
-    try:
-        response = requests.get(url, timeout=8)
-        if response.status_code == 200:
-            data = response.json()
-            est = data.get("estabelecimento", {})
-            telefone = f'{est.get("ddd", "")}{est.get("telefone", "")}'.strip()
-            email = est.get("email")
-            if telefone or email:
-                return {
-                    "fonte": "publica.cnpj.ws",
-                    "nome_fantasia": est.get("nome_fantasia"),
-                    "telefone": telefone if telefone else None,
-                    "email": email
-                }
-    except Exception as e:
-        print("Erro na API publica.cnpj.ws:", e)
-    return None
-
-def scraping_cnpj_biz(cnpj):
+# Busca telefone e email usando Selenium com melhorias
+def scraping_cnpj_biz_selenium(cnpj):
     url = f"https://cnpj.biz/{cnpj}"
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("window-size=1920,1080")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
+
     try:
-        response = requests.get(url, headers=headers, timeout=10)
-        if response.status_code == 200:
-            soup = BeautifulSoup(response.text, 'html.parser')
-            dados = {}
+        driver = webdriver.Chrome(options=options)
+        driver.get(url)
 
-            email_tag = soup.find("a", href=lambda h: h and "mailto:" in h)
-            telefone_tag = soup.find("a", href=lambda h: h and "tel:" in h)
+        # Espera até que o nome da empresa ou links estejam presentes
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, "a"))
+        )
 
-            dados["email"] = email_tag.text.strip() if email_tag else None
-            dados["telefone"] = telefone_tag.text.strip() if telefone_tag else None
+        html = driver.page_source
+        driver.quit()
 
-            nome_fantasia = soup.find("h1")
-            dados["nome_fantasia"] = nome_fantasia.text.strip() if nome_fantasia else None
+        soup = BeautifulSoup(html, 'html.parser')
+        telefone_tag = soup.find("a", href=lambda h: h and "tel:" in h)
+        telefone = telefone_tag['href'].replace("tel:", "") if telefone_tag else ""
 
-            if dados["email"] or dados["telefone"]:
-                dados["fonte"] = "scraping.cnpj.biz"
-                return dados
+        email_tag = soup.find("a", href=lambda h: h and "mailto:" in h)
+        email = email_tag['href'].replace("mailto:", "") if email_tag else ""
+
+        nome_fantasia = soup.find("h1")
+
+        return {
+            "nome_fantasia": nome_fantasia.text.strip() if nome_fantasia else "N/A",
+            "telefone": telefone,
+            "email": email,
+            "fonte": "cnpj.biz (Selenium)"
+        }
+
+
     except Exception as e:
-        print("Erro ao acessar cnpj.biz:", e)
-    return None
+        print("Erro ao buscar dados:", e)
+        return {
+            "nome_fantasia": "Erro ao buscar",
+            "telefone": "",
+            "email": "",
+            "fonte": "Erro"
+        }
 
-def buscar_dados_empresa(cnpj):
-    resultado = consulta_speedio(cnpj)
-    if resultado:
-        return resultado
-
-    resultado = consulta_publica_cnpj_ws(cnpj)
-    if resultado:
-        return resultado
-
-    resultado = scraping_cnpj_biz(cnpj)
-    if resultado:
-        return resultado
-
-    return {
-        "erro": "Não foi possível encontrar telefone e email nas fontes disponíveis.",
-        "fonte": None,
-        "telefone": None,
-        "email": None
-    }
-
+# Função chamada ao clicar em "Buscar"
 def buscar():
-    cnpj_raw = entry.get()
-    cnpj = limpar_cnpj(cnpj_raw)
+    cnpj = limpar_cnpj(entry_cnpj.get())
     if len(cnpj) != 14:
-        messagebox.showerror("Erro", "Digite um CNPJ válido com 14 dígitos numéricos.")
+        resultado_nome.configure(text="CNPJ inválido!")
         return
 
-    resultado = buscar_dados_empresa(cnpj)
+    resultado = scraping_cnpj_biz_selenium(cnpj)
+    resultado_nome.configure(text=resultado["nome_fantasia"])
+    resultado_fonte.configure(text=f"Fonte: {resultado['fonte']}")
 
-    nome_var.set(resultado.get("nome_fantasia", "N/A"))
-    fonte_var.set(resultado.get("fonte", "N/A"))
+    entry_telefone.configure(state="normal")
+    entry_telefone.delete(0, "end")
+    entry_telefone.insert(0, resultado["telefone"])
+    entry_telefone.configure(state="readonly")
 
-    telefone = resultado.get("telefone") or ""
-    email = resultado.get("email") or ""
+    entry_email.configure(state="normal")
+    entry_email.delete(0, "end")
+    entry_email.insert(0, resultado["email"])
+    entry_email.configure(state="readonly")
 
-    telefone_entry.config(state="normal")
-    telefone_entry.delete(0, tk.END)
-    telefone_entry.insert(0, telefone)
-    telefone_entry.config(state="readonly")
+# Interface com customtkinter
+app = ctk.CTk()
+app.title("Consulta CNPJ - by Marcelo Torres")
+app.geometry("500x350")
+app.resizable(False, False)
 
-    email_entry.config(state="normal")
-    email_entry.delete(0, tk.END)
-    email_entry.insert(0, email)
-    email_entry.config(state="readonly")
+ctk.CTkLabel(app, text="Digite o CNPJ (com ou sem pontuação):", font=("Arial", 14)).pack(pady=10)
+entry_cnpj = ctk.CTkEntry(app, width=250, font=("Arial", 14))
+entry_cnpj.pack(pady=5)
 
-root = tk.Tk()
-root.title("Consulta de CNPJ")
-root.geometry("400x280")
-root.resizable(False, False)
+ctk.CTkButton(app, text="Buscar", command=buscar, width=150).pack(pady=10)
 
-tk.Label(root, text="Digite o CNPJ (com ou sem pontos, barras e traços):").pack(pady=5)
-entry = tk.Entry(root, width=30)
-entry.pack(pady=5)
+resultado_nome = ctk.CTkLabel(app, text="", font=("Arial", 16, "bold"))
+resultado_nome.pack(pady=5)
 
-botao = tk.Button(root, text="Buscar", command=buscar)
-botao.pack(pady=10)
+resultado_fonte = ctk.CTkLabel(app, text="", font=("Arial", 12))
+resultado_fonte.pack(pady=2)
 
-frame_result = tk.Frame(root)
-frame_result.pack(pady=10, fill="x", padx=20)
+frame_resultados = ctk.CTkFrame(app)
+frame_resultados.pack(pady=15, fill="x", padx=40)
 
-tk.Label(frame_result, text="Nome fantasia:").grid(row=0, column=0, sticky="w")
-nome_var = tk.StringVar(value="")
-nome_label = tk.Label(frame_result, textvariable=nome_var, wraplength=350)
-nome_label.grid(row=0, column=1, sticky="w")
+ctk.CTkLabel(frame_resultados, text="Telefone:", font=("Arial", 12)).grid(row=0, column=0, sticky="w", padx=10, pady=5)
+entry_telefone = ctk.CTkEntry(frame_resultados, width=300, font=("Arial", 12), state="readonly")
+entry_telefone.grid(row=0, column=1, padx=10, pady=5)
 
-tk.Label(frame_result, text="Fonte dos dados:").grid(row=1, column=0, sticky="w")
-fonte_var = tk.StringVar(value="")
-fonte_label = tk.Label(frame_result, textvariable=fonte_var)
-fonte_label.grid(row=1, column=1, sticky="w")
+ctk.CTkLabel(frame_resultados, text="Email:", font=("Arial", 12)).grid(row=1, column=0, sticky="w", padx=10, pady=5)
+entry_email = ctk.CTkEntry(frame_resultados, width=300, font=("Arial", 12), state="readonly")
+entry_email.grid(row=1, column=1, padx=10, pady=5)
 
-tk.Label(frame_result, text="Telefone:").grid(row=2, column=0, sticky="w")
-telefone_entry = tk.Entry(frame_result, width=30, state="readonly")
-telefone_entry.grid(row=2, column=1, sticky="w")
+def abrir_github():
+    webbrowser.open("https://github.com/marcelotorres1982/PythonProject")
 
-tk.Label(frame_result, text="Email:").grid(row=3, column=0, sticky="w")
-email_entry = tk.Entry(frame_result, width=30, state="readonly")
-email_entry.grid(row=3, column=1, sticky="w")
+link_github = ctk.CTkLabel(app, text="🔗 Projeto no GitHub", text_color="white", cursor="hand2")
+link_github.pack(pady=5)
+link_github.bind("<Button-1>", lambda e: abrir_github())
 
-root.mainloop()
+app.mainloop()
