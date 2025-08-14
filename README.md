@@ -1,4 +1,4 @@
-🔍 CNPJ Lookup Tool
+# 🔍 CNPJ Lookup Tool
 
 This project allows you to query public information of Brazilian companies (CNPJs), extracting phone numbers and emails directly from https://cnpj.biz using web scraping with Selenium, and displaying the results in a modern GUI built with CustomTkinter.
 
@@ -33,17 +33,18 @@ Install dependencies with:
 
 pip install customtkinter selenium beautifulsoup4
 
+
 ⚙️ Usage
 
 Clone the repository:
 
-git clone https://github.com/your-username/repository-name.git
-cd repository-name
+    git clone https://github.com/your-username/repository-name.git
+    cd repository-name
 
 
 Run the script:
 
-python script_name.py
+    python script_name.py
 
 
 Enter a valid CNPJ in the interface and click Search.
