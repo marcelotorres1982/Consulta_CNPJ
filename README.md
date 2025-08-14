@@ -1,64 +1,57 @@
-🔍 Consulta de CNPJ
+🔍 CNPJ Lookup Tool
 
-Este projeto permite consultar informações públicas de empresas brasileiras (CNPJ), extraindo telefone e email diretamente do site https://cnpj.biz, 
-utilizando web scraping com Selenium, e exibe os dados em uma interface moderna com CustomTkinter.
+This project allows you to query public information of Brazilian companies (CNPJs), extracting phone numbers and emails directly from https://cnpj.biz using web scraping with Selenium, and displaying the results in a modern GUI built with CustomTkinter.
 
-🚀 Funcionalidades
-Consulta de CNPJ com ou sem pontuação (ex: 00.000.000/0000-00 ou 00000000000000)
+🚀 Features
 
-Extração automática de:
+Query CNPJs with or without punctuation (e.g., 00.000.000/0000-00 or 00000000000000)
 
-Nome Fantasia
+    Automatic extraction of:
+    Trade Name (Nome Fantasia)
+    Phone number (href="tel:")
+    Email (href="mailto:")
+    Modern graphical interface with copy-friendly fields for phone and email
+    Headless Selenium processing (browser runs in the background)
 
-Telefone (via href="tel:")
+| Tool              | Purpose                                            |
+| ----------------- | -------------------------------------------------- |
+| **Python**        | Main programming language                          |
+| **CustomTkinter** | Modern GUI based on Tkinter                        |
+| **Selenium**      | Web automation and scraping                        |
+| **BeautifulSoup** | HTML parsing and extraction                        |
+| **re (Regex)**    | CNPJ character cleaning                            |
+| **ChromeDriver**  | Automated browser (requires separate installation) |
 
-Email (via href="mailto:")
 
-Interface gráfica moderna com campos de cópia fácil de telefone e email
-
-Processamento automático com Selenium Headless (sem abrir o navegador)
-
-🛠 Tecnologias Utilizadas
-Ferramenta	Função
-Python	Linguagem principal
-CustomTkinter	Interface gráfica moderna baseada no Tkinter
-Selenium	Automação e scraping do conteúdo da web
-BeautifulSoup	Extração e parsing de HTML
-re (Regex)	Limpeza de caracteres do CNPJ
-ChromeDriver	Navegador automatizado (requer instalação separada)
-
-📦 Requisitos
 Python 3.8+
 
-Google Chrome instalado
+Google Chrome installed
 
-ChromeDriver compatível com sua versão do Chrome
+ChromeDriver compatible with your Chrome version
 
-Instale as dependências com:
+Install dependencies with:
 
-bash
 pip install customtkinter selenium beautifulsoup4
 
-⚙️ Execução
-Clone este repositório:
+⚙️ Usage
 
-git clone https://github.com/seu-usuario/nome-do-repositorio.git
-cd nome-do-repositorio
-Execute o script:
+Clone the repository:
 
-bash
-python nome_do_arquivo.py
-
-Digite um CNPJ válido na interface e clique em Buscar.
-
-📌 Observações
-A fonte de dados utilizada (cnpj.biz) é pública, mas o site não fornece API oficial. O scraping respeita limites razoáveis (até ~30 consultas diárias).
-
-Este projeto é para fins educacionais e uso pessoal.
-
-📷 Exemplo
-
-![image](https://github.com/user-attachments/assets/c2f874c7-4a86-4a14-8aa4-8be6e791acfe)
+git clone https://github.com/your-username/repository-name.git
+cd repository-name
 
 
-🧑‍💻 Desenvolvido por Marcelo Torres
+Run the script:
+
+python script_name.py
+
+
+Enter a valid CNPJ in the interface and click Search.
+
+📌 Notes
+
+The data source (cnpj.biz) is public, but the site does not provide an official API.
+
+Scraping respects reasonable limits (~30 queries per day).
+
+This project is intended for educational and personal use only.
