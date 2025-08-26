@@ -32,17 +32,18 @@ Uma aplicação web moderna e robusta para consulta completa de informações em
 - 📅 **Data de Abertura**
 - 💰 **Capital Social**
 
-### 📞 Contatos
-- 📞 **Telefones** (quando disponível publicamente)
-- 📧 **Emails** (quando disponível publicamente)
+### 📧 Contatos
+- 📧 **Emails**
+- @ marcelotorres1982@gmail.com
 
 ### 📍 Localização
-- 🏠 **Endereço Completo** (Logradouro, número, bairro, cidade, UF, CEP)
+- 🏠 Porto Alegre/RS
 
 ### 🏭 Atividades
 - 📋 **CNAE Principal** (Código e descrição da atividade)
 
 ## 🖥️ Demo
+https://consultacnpj-cdavsorkdb85j6tvyaxmdz.streamlit.app/
 
 ### Interface Principal
 ```
@@ -220,8 +221,8 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 🔗 Links Úteis
 
-- **🚀 [Demo Online](https://cnpj-consulta.streamlit.app)** *(substitua pela URL real)*
-- **🐙 [Repositório GitHub](https://github.com/marcelotorres1982/PythonProject)**
+- **🚀 [Demo Online](https://consultacnpj-cdavsorkdb85j6tvyaxmdz.streamlit.app/)** 
+- **🐙 [Repositório GitHub](https://github.com/marcelotorres1982/consulta_cnpj)**
 - **📚 [Documentação Streamlit](https://docs.streamlit.io)**
 - **🏛️ [Receita Federal](https://www.gov.br/receitafederal)**
 - **🇧🇷 [BrasilAPI](https://brasilapi.com.br)**
@@ -230,7 +231,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 **Marcelo Torres**
 - GitHub: [@marcelotorres1982](https://github.com/marcelotorres1982)
-- LinkedIn: [Conecte-se comigo]([https://linkedin.com/in/marcelotorres1982](https://www.linkedin.com/in/marcelo-t-554b8045/)) *(ajuste conforme necessário)*
+- LinkedIn: [Conecte-se comigo](https://www.linkedin.com/in/marcelo-t-554b8045/) 
 
 ---
 
