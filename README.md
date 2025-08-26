@@ -230,7 +230,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 **Marcelo Torres**
 - GitHub: [@marcelotorres1982](https://github.com/marcelotorres1982)
-- LinkedIn: [Conecte-se comigo](https://linkedin.com/in/marcelotorres1982) *(ajuste conforme necessário)*
+- LinkedIn: [Conecte-se comigo]([https://linkedin.com/in/marcelotorres1982](https://www.linkedin.com/in/marcelo-t-554b8045/)) *(ajuste conforme necessário)*
 
 ---
 
